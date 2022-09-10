@@ -5,7 +5,9 @@ import { JeoBoard } from './store/jeoboard.model.js';
 import { Type } from './lib/Type.js';
 
 const typer = new Type()
-console.log(JSON.parse(localStorage.getItem('jeo1659488031265')));
+
+// console.log(JSON.parse(localStorage.getItem('jeo1659488031265')));
+
 typer.define.interface('JeoTile', {
   answered: Boolean,
   activated: Boolean,
@@ -43,21 +45,21 @@ export class JsonMap extends Map {
 const jsonMap = new JsonMap([['suk', 'me']])
 
 
-console.log('JSON.stringify(jsonMap', JSON.stringify(jsonMap))
-console.log('jsonMap', [...jsonMap.entries()])
+// console.log('JSON.stringify(jsonMap', JSON.stringify(jsonMap))
+// console.log('jsonMap', [...jsonMap.entries()])
 
 
 
 const mymap = new Map([
   ['suk', 'me']
 ])
-console.log('JSON.stringify(mymap', JSON.stringify(mymap))
+// console.log('JSON.stringify(mymap', JSON.stringify(mymap))
 
-console.log(
-  'poo instanceof String',
-  new Map() == new Map(),
-  ({}).constructor(Boolean)(0)
-);
+// console.log(
+//   'poo instanceof String',
+//   new Map() == new Map(),
+//   ({}).constructor(Boolean)(0)
+// );
 
 const { event } = ham;
 
@@ -68,15 +70,15 @@ const TileTypes = {
 }
 
 const jeoboard = new JeoBoard();
-
 let jeopardy = jeoboard.start()
+
 
 const handleTileClick = (event) => {
   let updates = {}
 
   const tile = event.target.closest('.tile')
 
-  if (tile.dataset.answered === 'true') return;
+  // if (tile.dataset.answered === 'true') return;
 
   const currentActives = [...document.querySelectorAll('[data-activated="true"]')].filter(t => t !== tile)
   currentActives.forEach((t, i) => t.dataset.activated = false)
@@ -84,9 +86,20 @@ const handleTileClick = (event) => {
   const currentCatTiles = [...document.querySelectorAll('.highlight')].filter(t => t !== tile)
   currentCatTiles.forEach((t, i) => t.classList.remove('highlight'));
 
-  const isAlreadyActive = tile.dataset.activated == 'false' ? false : true
+  const isAlreadyActive = tile.dataset.activated == 'false' ? false : true;
+  const isAlreadyAnswered = tile.dataset.answered == 'true' ? true : false;
 
-  if (isAlreadyActive) {
+  if (isAlreadyAnswered) {
+    updates = {
+      answered: false,
+      activated: false,
+      value: +tile.dataset.value,
+      categoryId: +tile.dataset.categoryId,
+      dailyDouble: +tile.dataset.dailyDouble || null,
+      position: +tile.dataset.position,
+    }
+  }
+  else if (isAlreadyActive) {
     updates = {
       answered: true,
       activated: false,

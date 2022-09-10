@@ -1,5 +1,6 @@
 //
 import { template } from './renderer.js';
+
 export class AppView {
   constructor(selector) {
     this.self = document.querySelector(selector);
