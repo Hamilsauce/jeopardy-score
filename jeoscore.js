@@ -6,17 +6,15 @@ import { Type } from './lib/Type.js';
 
 const typer = new Type()
 
-// console.log(JSON.parse(localStorage.getItem('jeo1659488031265')));
-
 typer.define.interface('JeoTile', {
   answered: Boolean,
   activated: Boolean,
+  answeredCorrectly: Boolean,
   value: Number,
   position: Number,
   categoryId: Number,
   dailyDouble: Number,
 });
-
 
 
 export class JsonMap extends Map {
@@ -41,25 +39,7 @@ export class JsonMap extends Map {
   }
 };
 
-
 const jsonMap = new JsonMap([['suk', 'me']])
-
-
-// console.log('JSON.stringify(jsonMap', JSON.stringify(jsonMap))
-// console.log('jsonMap', [...jsonMap.entries()])
-
-
-
-const mymap = new Map([
-  ['suk', 'me']
-])
-// console.log('JSON.stringify(mymap', JSON.stringify(mymap))
-
-// console.log(
-//   'poo instanceof String',
-//   new Map() == new Map(),
-//   ({}).constructor(Boolean)(0)
-// );
 
 const { event } = ham;
 
@@ -67,6 +47,13 @@ const { event } = ham;
 const TileTypes = {
   value: 'value',
   name: 'categoryName'
+}
+
+const State = {
+  activeTile: {
+    dom: null,
+    clicks: 0,
+  }
 }
 
 const jeoboard = new JeoBoard();
@@ -88,21 +75,60 @@ const handleTileClick = (event) => {
 
   const isAlreadyActive = tile.dataset.activated == 'false' ? false : true;
   const isAlreadyAnswered = tile.dataset.answered == 'true' ? true : false;
+  const isAlreadyAnsweredCorrectly = tile.dataset.answeredCorrectly == 'true' ? true : false;
+  const isAlreadyAnsweredIncorrectly = tile.dataset.answeredIncorrectly == 'true' ? true : false;
 
-  if (isAlreadyAnswered) {
+  if (isAlreadyAnswered && isAlreadyAnsweredCorrectly) {
     updates = {
-      answered: false,
+      answered: true,
       activated: false,
+      answeredIncorrectly: false,
       value: +tile.dataset.value,
       categoryId: +tile.dataset.categoryId,
       dailyDouble: +tile.dataset.dailyDouble || null,
       position: +tile.dataset.position,
     }
   }
+  else if (isAlreadyAnswered && isAlreadyAnsweredCorrectly) {
+    updates = {
+      answered: false,
+      activated: false,
+      answeredCorrectly: false,
+      answeredIncorrectly: true,
+      value: +tile.dataset.value,
+      categoryId: +tile.dataset.categoryId,
+      dailyDouble: +tile.dataset.dailyDouble || null,
+      position: +tile.dataset.position,
+    }
+  }
+
+  else if (isAlreadyAnswered && !isAlreadyAnsweredCorrectly) {
+    updates = {
+      answered: false,
+      activated: false,
+      answeredCorrectly: false,
+      value: +tile.dataset.value,
+      categoryId: +tile.dataset.categoryId,
+      dailyDouble: +tile.dataset.dailyDouble || null,
+      position: +tile.dataset.position,
+    }
+  }
+  // else if (!isAlreadyAnswered) {
+  //   updates = {
+  //     answered: false,
+  //     activated: false,
+  //     answeredCorrectly: false,
+  //     value: +tile.dataset.value,
+  //     categoryId: +tile.dataset.categoryId,
+  //     dailyDouble: +tile.dataset.dailyDouble || null,
+  //     position: +tile.dataset.position,
+  //   }
+  // }
   else if (isAlreadyActive) {
     updates = {
       answered: true,
       activated: false,
+      answeredCorrectly: true,
       value: +tile.dataset.value,
       categoryId: +tile.dataset.categoryId,
       dailyDouble: +tile.dataset.dailyDouble || null,
@@ -112,6 +138,7 @@ const handleTileClick = (event) => {
     updates = {
       answered: false,
       activated: true,
+      answeredCorrectly: false,
       value: +tile.dataset.value,
       categoryId: +tile.dataset.categoryId,
       position: +tile.dataset.position,
@@ -174,10 +201,13 @@ const createTile = (tile, tileType = 'value') => {
   t.dataset.tileType = tileType;
   t.dataset.position = tile.position
   t.dataset.categoryId = tile.categoryId;
+  t.dataset.answeredCorrectly = tile.answeredCorrectly;
 
   if (tileType === 'value' && !tile.dailyDouble) {
     t.dataset.value = tile.value;
-    t.textContent = tile.answered ? '✓' : tile.value;
+    t.textContent = tile.answered && tile.answeredCorrectly === true ? '✓' : t.textContent;
+    t.textContent = tile.answered && tile.answeredCorrectly === false ? 'X' : t.textContent;
+    t.textContent = !tile.answered && !tile.answeredCorrectly === true ? tile.value : t.textContent;
     t.dataset.answered = tile.answered;
     t.dataset.activated = tile.activated;
     t.dataset.position = tile.position

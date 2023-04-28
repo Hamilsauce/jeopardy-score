@@ -35,6 +35,7 @@ export class JeoBoard extends EventTarget {
       categoryId,
       value,
       answered: false,
+      answeredCorrectly: false,
       activated: false,
       position,
       dailyDouble: 0,
@@ -114,6 +115,7 @@ export class JeoBoard extends EventTarget {
     categoryId,
     value,
     answered,
+    answeredCorrectly,
     activated,
     position,
     dailyDouble
@@ -121,7 +123,7 @@ export class JeoBoard extends EventTarget {
 
     const tile = this.getTile(categoryId, position)
 
-    Object.assign(tile, { answered, activated, value, position, dailyDouble })
+    Object.assign(tile, { answered, answeredCorrectly, activated, value, position, dailyDouble })
 
     if (activated) this.updateActiveTile(tile)
 

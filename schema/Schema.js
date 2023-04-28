@@ -56,13 +56,9 @@ export class Schema extends Map {
     if (!name || !schematic) throw new Error('Schema missing name or definition.')
 
     super(Object.entries(schematic));
-
-
   }
 
-  validateField(name, value) {
-
-  }
+  validateField(name, value) {}
 
   validate(record = {}) {
     return [...this.#fields].every(([fieldName, def]) => record[fieldName])
@@ -73,7 +69,7 @@ export class Schema extends Map {
   }
 
   has(fieldName = '') {
-    return this.#fields.has(fieldName)
+    return this.#fields.has(fieldName);
   }
 
   add({ fieldName, definitionObject }) {
@@ -82,13 +78,9 @@ export class Schema extends Map {
   }
 
   remove(fieldName = '') {
-    this.#fields.delete(fieldName)
+    this.#fields.delete(fieldName);
     return this;
   }
-
-  get prop() { return this._prop };
-
-  set prop(newValue) { this._prop = newValue };
 }
 
 

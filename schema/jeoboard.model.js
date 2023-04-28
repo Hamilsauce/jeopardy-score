@@ -3,11 +3,12 @@ import { range } from '../lib/collection.helpers.js'
 import { rounds } from './rounds.model.js'
 import { Tile } from './tile.model.js'
 
+
 export class JeoBoard extends EventTarget {
   #activatedTile = null;
 
   constructor() {
-    super()
+    super();
 
     this.rounds = rounds;
     this.categories = [1, 2, 3, 4, 5, 6];
@@ -35,6 +36,8 @@ export class JeoBoard extends EventTarget {
       categoryId,
       value,
       answered: false,
+      answeredCorrectly: false,
+      answeredIncorrectly: false,
       activated: false,
       position,
       dailyDouble: 0,

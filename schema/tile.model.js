@@ -22,12 +22,16 @@ export class Tile {
       this.activated = true;
       this.answered = false;
     },
-    answered: () => {
+    answeredCorrectly: () => {
+      this.activated = false;
+      this.answered = true;
+    },
+    answeredIncorrectly: () => {
       this.activated = false;
       this.answered = true;
     },
 
-    has(state) { return ['initial', 'active', 'answered'].includes(state) }
+    has(state) { return ['initial', 'active', 'answered', 'answeredIncorrectly'].includes(state) }
   }
 
   constructor(model) {

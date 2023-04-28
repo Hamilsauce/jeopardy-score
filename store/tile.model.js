@@ -11,6 +11,7 @@ export class Tile {
   #dailyDouble = Field.define({ name: 'dailyDouble', type: 'number', nullable: true });
   #activated = Field.define({ name: 'activated', type: 'boolean' });
   #answered = Field.define({ name: 'answered', type: 'boolean' });
+  #answeredCorrectly = Field.define({ name: 'answeredCorrectly', type: 'boolean' });
   #position = Field.define({ name: 'position', type: 'number' })
 
   #tileStates = {
@@ -26,8 +27,13 @@ export class Tile {
       this.activated = false;
       this.answered = true;
     },
+    answeredIncorrectly: () => {
+      this.activated = false;
+      this.answered = true;
+    },
 
-    has(state) { return ['initial', 'active', 'answered'].includes(state) }
+
+    has(state) { return ['initial', 'active', 'answered', 'answeredIncorrectly'].includes(state) }
   }
 
   constructor(model) {
@@ -47,7 +53,9 @@ export class Tile {
     this.position = model.position
     this.dailyDouble = model.dailyDouble || 0
     this.activated = model.activated
-    this.answered = model.answered
+    this.answered = model.answered;
+    this.answeredCorrectly = model.answeredCorrectly;
+
 
     if (!this.validate()) throw new Error('Invalid tile data')
 
@@ -68,6 +76,7 @@ export class Tile {
       position: this.position,
       dailyDouble: this.dailyDouble,
       answered: this.answered,
+      answeredCorrectly: this.answeredCorrectly,
     }
   }
 
@@ -104,4 +113,13 @@ export class Tile {
     if (v === true) this.activated = false;
     this.#answered.setValue(v);
   }
+
+  get answeredCorrectly() { return this.#answeredCorrectly.value }
+
+  set answeredCorrectly(v) {
+    // if (v === true) this.answeredCorrectly = false;
+    console.log('answeredCorrectly', v)
+    this.#answeredCorrectly.setValue(v || false);
+  }
+
 }
